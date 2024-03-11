@@ -11,7 +11,8 @@ class Detection(QThread):
     def run(self):
         self.running = True
 
-        cap = cv2.VideoCapture(1)  # Currently webcam
+        # 0 = webcam, 1 = external cam
+        cap = cv2.VideoCapture(1)  # Currently external cam
 
         while self.running:
             ret, frame = cap.read()
