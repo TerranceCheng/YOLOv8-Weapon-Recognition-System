@@ -1,0 +1,10 @@
+
+path: '/content/gdrive/My Drive/Semesters/Year 3/Y3 Sem 1/Final Year Project 1/YOLOv8 Weapon Recognition System/Weapon Dataset' # dataset root dir
+train: train  # train images (relative to 'path')
+val: train  # val images (relative to 'path')
+
+# Classes
+names:
+  HandGun
+  Knife
+  Rifle
