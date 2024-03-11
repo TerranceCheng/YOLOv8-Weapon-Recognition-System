@@ -5,6 +5,6 @@ val: train  # val images (relative to 'path')
 
 # Classes
 names:
-  HandGun
-  Knife
-  Rifle
+  0: HandGun
+  1: Knife
+  2: Rifle
