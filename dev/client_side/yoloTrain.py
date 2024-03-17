@@ -18,7 +18,6 @@ model.export(format="onnx",opset=12)
 # if device == '0':
 #     torch.cuda.set_device(0)
 
-
 # # Load a model
 # # model = YOLO('best.pt')  # build a new model from scratch
 # # results=model('a.jpeg')
