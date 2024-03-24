@@ -3,7 +3,7 @@
 from ultralytics import YOLO
 
 # Create model
-model = YOLO('best.pt')
+model = YOLO('yolov8s.pt')
 
 # Train model
 results = model.train(data='dev\client_side\config.yaml', epochs=35, save_period=-1)
