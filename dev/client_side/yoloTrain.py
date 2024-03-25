@@ -5,7 +5,7 @@ from ultralytics import YOLO
 # Create model
 model = YOLO('yolov8s.pt')
 
-# Train model
+# Train model 
 results = model.train(data='dev\client_side\config.yaml', epochs=35, save_period=-1)
 model.export(format="onnx",opset=12)
 
@@ -18,7 +18,7 @@ model.export(format="onnx",opset=12)
 # if device == '0':
 #     torch.cuda.set_device(0)
 
-# # Load a model
+# # Load a model 
 # # model = YOLO('best.pt')  # build a new model from scratch
 # # results=model('a.jpeg')
 # # model.to(device)
