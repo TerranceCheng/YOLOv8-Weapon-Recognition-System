@@ -55,7 +55,7 @@ class Worker1(QThread):
             classes = [line.strip() for line in f.readlines()] 
 
         # Initialize YOLO model
-        model = YOLO('weaponRecognition.pt')
+        model = YOLO('best.pt')
         # Initialize video capture
         cap = cv2.VideoCapture(0)
 
