@@ -1,6 +1,6 @@
 task: detect
 mode: train
-model: yolov8s.pt
+model: best.pt
 data: dev\client_side\config.yaml
 epochs: 35
 time: null
