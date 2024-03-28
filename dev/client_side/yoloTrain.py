@@ -3,10 +3,10 @@
 from ultralytics import YOLO
 
 # Create model
-model = YOLO('yolov8s.pt')
+model = YOLO('best.pt')
 
-# Train model 
-results = model.train(data='dev\client_side\config.yaml', epochs=35, save_period=-1)
+# Train model
+results = model.train(data='dev\client_side\config.yaml', epochs=20, save_period=-1)
 model.export(format="onnx",opset=12)
 
 # !!!!!!!!!!! TORCH CUDA, GPU !!!!!!!!!!!
