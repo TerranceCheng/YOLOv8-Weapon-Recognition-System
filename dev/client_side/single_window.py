@@ -57,10 +57,15 @@ class Worker1(QThread):
         # Initialize YOLO model
         model = YOLO('best.pt')
         # Initialize video capture
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(1, cv2.CAP_ANY)
+        cap.set(cv2.CAP_PROP_SETTINGS, 1)
+        cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 1)
 
         while self.ThreadActive:
             ret, frame = cap.read()
+            cv2.normalize(frame, frame, 0, 255, cv2.NORM_MINMAX)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
             if ret:
                 # Convert frame to RGB
