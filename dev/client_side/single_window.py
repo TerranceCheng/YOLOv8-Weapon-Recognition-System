@@ -57,7 +57,7 @@ class Worker1(QThread):
         # Initialize YOLO model
         model = YOLO('best.pt')
         # Initialize video capture
-        cap = cv2.VideoCapture(1, cv2.CAP_ANY)
+        cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
         cap.set(cv2.CAP_PROP_SETTINGS, 1)
         cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 1)
 
