@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QDialog
 from PyQt5.uic import loadUi
-import os
+import os 
 from detection_window import DetectionWindow
 
 class LoginWindow(QDialog):
