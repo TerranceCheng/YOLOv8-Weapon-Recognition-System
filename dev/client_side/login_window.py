@@ -1,32 +1,28 @@
-from PyQt5.QtWidgets import QDialog
-from PyQt5.uic import loadUi
+import sys
 import os
-from detection_window import DetectionWindow
+from PyQt5 import QtWidgets, uic
 
-class LoginWindow(QDialog):
+# Get the absolute path of the .ui file
+script_path = os.path.abspath(__file__)
+file_dir = os.path.split(script_path)[0]
+ui_file = os.path.join(file_dir, 'UI/login_window.ui')
+
+class LoginWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(LoginWindow, self).__init__()
-        script_path = os.path.abspath(__file__)
-        file_dir = os.path.split(script_path)[0]
-        login_window = os.path.join(file_dir, 'UI\login_window.ui')
+        # Load the .ui file
+        uic.loadUi(ui_file, self)
 
-        loadUi(login_window, self)
-        self.detection_window = DetectionWindow()
+def main():
+    # Initialize the Qt application
+    app = QtWidgets.QApplication(sys.argv)
 
-        self.registerButton.clicked.connect(self.go_to_register_page)
-        self.loginButton.clicked.connect(self.open_settings_window)
+    # Create and show the main window
+    window = LoginWindow()
+    window.show()
 
-        self.show()
+    # Execute the application
+    sys.exit(app.exec_())
 
-    def go_to_register_page(self):
-        print('Go to Register Page')
-
-    def open_settings_window(self):
-        if self.detection_window.isVisible():
-            print('Detection window is already open!')
-        else:
-            self.detection_window.create_detection_instance()
-            self.detection_window.start_detection()
-           
-
-        
+if __name__ == "__main__":
+    main()

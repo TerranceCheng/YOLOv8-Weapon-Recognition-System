@@ -1,9 +1,11 @@
-
-path: D:\SEGi Kota Damansara\Semesters\Year 3\Y3 Sem 1\Final Year Project 1\YOLOv8 Weapon Recognition System\Weapon Dataset # dataset root dir
+# Declare the path to dataset images
+# Path is set as fixed path since relative path will generate errors during training session
+path: C:\Users\yongt\Desktop\FYP Project\YOLOv8 Weapon Recognition System\datasets # dataset's directory / file location
 train: train  # train images (relative to 'path')
-val: train  # val images (relative to 'path')
+val: valid  # validation images (relative to 'path')
 
 # Classes
+# Three
 names:
   0: HandGun
   1: Knife

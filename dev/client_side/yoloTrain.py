@@ -6,8 +6,9 @@ from ultralytics import YOLO
 model = YOLO('best.pt')
 
 # Train model
-results = model.train(data='dev\client_side\config.yaml', epochs=20, save_period=-1)
-model.export(format="onnx",opset=12)
+results = model.train(data='dev\client_side\config.yaml', epochs=50, save_period=-1, resume=True)
+# model.info(detailed=True)
+# model.export(format="onnx",opset=12)
 
 # !!!!!!!!!!! TORCH CUDA, GPU !!!!!!!!!!!
 
