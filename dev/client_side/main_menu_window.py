@@ -24,10 +24,11 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         self.cam1Label = self.findChild(QtWidgets.QLabel, 'cam1Label')
         self.cam2Label = self.findChild(QtWidgets.QLabel, 'cam2Label')
         self.addCameraButton = self.findChild(QtWidgets.QPushButton, 'addCameraButton')
+        self.cam2Location = self.findChild(QtWidgets.QLabel, 'cam2Location')
 
         # Create instances of each page
         self.main_menu_page = QtWidgets.QWidget()
-        self.cameras_page = CamerasWindow(self.cam1Label, self.cam2Label, self.addCameraButton)
+        self.cameras_page = CamerasWindow(self.cam1Label, self.cam2Label, self.addCameraButton, self.cam2Location)
         self.detection_log_page = DetectionLogWindow()
         self.settings_page = SettingsWindow()
 

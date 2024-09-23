@@ -3,7 +3,7 @@ import os
 import cv2
 import numpy as np
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QMessageBox, QComboBox
+from PyQt5.QtWidgets import QMessageBox, QComboBox, QLineEdit, QLabel, QVBoxLayout, QDialogButtonBox, QDialog
 from PyQt5.QtMultimedia import QSound  # For playing audio
 from ultralytics import YOLO
 import sqlite3
@@ -16,8 +16,9 @@ LOCATION = "sample_location"
 AUDIO_ALERT_PATH = r"C:\Users\yongt\Desktop\FYP Project\YOLOv8 Weapon Recognition System\dev\client_side\resources\alert.wav"  # Path to alert sound file
 
 class CamerasWindow(QtWidgets.QWidget):
-    def __init__(self, cam1Label, cam2Label=None, addCameraButton=None):
+    def __init__(self, cam1Label, cam2Label=None, addCameraButton=None, cam2Location=None):
         super(CamerasWindow, self).__init__()
+        self.cam2Location = cam2Location  # Set the cam2Location
         self.cam1Label = cam1Label  # Set the cam1Label
         self.cam2Label = cam2Label  # Set the cam2Label for external camera (if any)
 
@@ -132,12 +133,17 @@ class CamerasWindow(QtWidgets.QWidget):
 
         # Prepare the SQL query
         query = """
-        INSERT INTO detection_log (detected_weapon, location, detection_date, detection_time, image_name, image_data)
+        INSERT INTO detection_log (detected_weapon, location, detection_date, detection_time, image_name, image_data, checked)
         VALUES (?, ?, ?, ?, ?, ?);
         """
-        cursor = self.conn.cursor()
-        cursor.execute(query, (weapon_name, LOCATION, detection_date, detection_time, image_name, image_data))
+        checked = 0
+        cursor = self.conn.cursor() 
+        cursor.execute(query, (weapon_name, LOCATION, detection_date, detection_time, image_name, image_data, checked))
         self.conn.commit()
+            
+    #TODO: Currently add second camera when web cam is using wont show error message.
+    #TODO: Should remove cam 0 from the list
+    #TODO: If remove camera while working, should display error instead of freezing?
 
     def add_camera(self):
         # Scan for available cameras (assume max 5 cameras, excluding the one in use)
@@ -150,37 +156,61 @@ class CamerasWindow(QtWidgets.QWidget):
                     available_cameras.append(f"Camera {index}")
                 cap.release()
 
-        # Show a dialog to select a camera
+        # Show a dialog to select a camera and enter the camera location
         if available_cameras:
-            dialog = QMessageBox(self)
-            dialog.setWindowTitle("Select Camera")
-            dialog.setText("Choose a camera to add:")
+            dialog = QDialog(self)
+            dialog.setWindowTitle("Select Camera and Location")
+
+            # Create layout for the dialog
+            layout = QVBoxLayout(dialog)
 
             # Create and add a combo box with the available cameras
+            label = QLabel("Choose a camera to add and provide its location:")
             combo_box = QComboBox(dialog)
             combo_box.addItems(available_cameras)
-            dialog.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
 
-            # Set the font color to black using a stylesheet
-            dialog.setStyleSheet("QLabel { color: black; }")
+            # Create and add a line edit for the camera location
+            location_input = QLineEdit(dialog)
+            location_input.setPlaceholderText("Enter camera location")
 
-            # Add the combo box to the layout of the message box
-            layout = dialog.layout()
-            layout.addWidget(combo_box, 1, 1)
+            # Add the combo box and location input to the layout
+            layout.addWidget(label)
+            layout.addWidget(combo_box)
+            layout.addWidget(location_input)
+
+            # Create OK and Cancel buttons
+            button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+            layout.addWidget(button_box)
+
+            # Set the font color to black for all widgets
+            dialog.setStyleSheet("""
+                QLabel { color: black; }
+                QComboBox { color: black; }
+                QLineEdit { color: black; }
+                QDialogButtonBox { color: black; }
+            """)
+
+            # Connect the OK and Cancel buttons to the dialog result
+            button_box.accepted.connect(dialog.accept)
+            button_box.rejected.connect(dialog.reject)
 
             result = dialog.exec_()
-            if result == QMessageBox.Ok:
+            if result == QDialog.Accepted:
                 # Get the selected camera index from the combo box
                 selected_camera_index = int(combo_box.currentText().split()[-1])
                 self.cap2 = cv2.VideoCapture(selected_camera_index)
                 if not self.cap2.isOpened():
                     QMessageBox.warning(self, "Error", f"Failed to open Camera {selected_camera_index}.")
+                else:
+                    # Get the entered location and update the cam2Location label
+                    camera_location = location_input.text()
+                    self.cam2Location.setText(camera_location)
         else:
             # Show a message if no external cameras are available
             msg = QMessageBox(self)
             msg.setWindowTitle("No Cameras")
             msg.setText("No external cameras detected.")
-            msg.setStyleSheet("QLabel { color: black; }")
+            msg.setStyleSheet("QLabel { color: black; } QPushButton { color: black; }")
             msg.exec_()
 
     def closeEvent(self, event):
