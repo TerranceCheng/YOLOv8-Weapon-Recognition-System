@@ -213,6 +213,12 @@
                 <iconset>
                  <normaloff>icons/home.svg</normaloff>icons/home.svg</iconset>
                </property>
+               <property name="iconSize">
+                <size>
+                 <width>50</width>
+                 <height>20</height>
+                </size>
+               </property>
               </widget>
              </item>
              <item>
@@ -223,6 +229,12 @@
                <property name="icon">
                 <iconset>
                  <normaloff>icons/camera.svg</normaloff>icons/camera.svg</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>50</width>
+                 <height>20</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -235,6 +247,12 @@
                 <iconset>
                  <normaloff>icons/search.svg</normaloff>icons/search.svg</iconset>
                </property>
+               <property name="iconSize">
+                <size>
+                 <width>50</width>
+                 <height>20</height>
+                </size>
+               </property>
               </widget>
              </item>
              <item>
@@ -245,6 +263,12 @@
                <property name="icon">
                 <iconset>
                  <normaloff>icons/settings.svg</normaloff>icons/settings.svg</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>50</width>
+                 <height>20</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -294,6 +318,12 @@
                 <iconset>
                  <normaloff>icons/log-out.svg</normaloff>icons/log-out.svg</iconset>
                </property>
+               <property name="iconSize">
+                <size>
+                 <width>50</width>
+                 <height>20</height>
+                </size>
+               </property>
               </widget>
              </item>
             </layout>
@@ -329,16 +359,36 @@
       </property>
       <widget class="QWidget" name="MainMenuPage">
        <layout class="QVBoxLayout" name="verticalLayout_6">
-        <item>
+        <item alignment="Qt::AlignTop">
          <widget class="QWidget" name="statsContainer" native="true">
+          <property name="styleSheet">
+           <string notr="true">#NewDCountLabel{
+	font: 20pt;
+}
+
+#onCamCountLabel{
+	font: 20pt;
+}
+
+#offCamCountLabel{
+	font: 20pt;
+}
+
+#ToBeRCountLabel{
+	font: 20pt;
+}</string>
+          </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <property name="topMargin">
-            <number>60</number>
-           </property>
            <item>
             <widget class="QFrame" name="newDetectionFrame_2">
              <property name="enabled">
               <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
@@ -347,30 +397,69 @@
               <enum>QFrame::Raised</enum>
              </property>
              <layout class="QGridLayout" name="gridLayout_8">
-              <item row="0" column="1">
-               <widget class="QLabel" name="label_16">
+              <item row="1" column="1">
+               <widget class="QLabel" name="NewDCountLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>20</pointsize>
+                  <weight>50</weight>
+                  <italic>false</italic>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">font: 20pt;</string>
+                </property>
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>0</string>
+                </property>
+                <property name="textFormat">
+                 <enum>Qt::PlainText</enum>
                 </property>
                 <property name="alignment">
-                 <set>Qt::AlignCenter</set>
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
-               <widget class="QLabel" name="label_17">
+              <item row="0" column="1">
+               <widget class="QLabel" name="NewDLabel">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>New Detection (7 Days)</string>
                 </property>
                 <property name="alignment">
-                 <set>Qt::AlignCenter</set>
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item row="0" column="0" rowspan="2">
-               <widget class="QLabel" name="label_18">
+               <widget class="QPushButton" name="pushButton">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>icons/crosshair.svg</normaloff>icons/crosshair.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>50</width>
+                  <height>50</height>
+                 </size>
                 </property>
                </widget>
               </item>
@@ -387,29 +476,53 @@
              </property>
              <layout class="QGridLayout" name="gridLayout_7">
               <item row="0" column="1">
-               <widget class="QLabel" name="label_13">
+               <widget class="QLabel" name="ToBeRLabel">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>To Be Reviewed Detections (7 Days)</string>
                 </property>
                 <property name="alignment">
-                 <set>Qt::AlignCenter</set>
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QLabel" name="label_14">
+               <widget class="QLabel" name="ToBeRCountLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>20</pointsize>
+                  <weight>50</weight>
+                  <italic>false</italic>
+                  <bold>false</bold>
+                 </font>
+                </property>
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>0</string>
                 </property>
                 <property name="alignment">
-                 <set>Qt::AlignCenter</set>
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item row="0" column="0" rowspan="2">
-               <widget class="QLabel" name="label_15">
+               <widget class="QPushButton" name="ToBeRIcon">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>icons/alert-triangle.svg</normaloff>icons/alert-triangle.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>50</width>
+                  <height>50</height>
+                 </size>
                 </property>
                </widget>
               </item>
@@ -425,30 +538,54 @@
               <enum>QFrame::Raised</enum>
              </property>
              <layout class="QGridLayout" name="gridLayout_9">
-              <item row="1" column="1">
-               <widget class="QLabel" name="label_19">
+              <item row="0" column="1">
+               <widget class="QLabel" name="onCamLabel">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>Cameras (Online)</string>
                 </property>
                 <property name="alignment">
-                 <set>Qt::AlignCenter</set>
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="label_20">
+              <item row="1" column="1">
+               <widget class="QLabel" name="onCamCountLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>20</pointsize>
+                  <weight>50</weight>
+                  <italic>false</italic>
+                  <bold>false</bold>
+                 </font>
+                </property>
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>0</string>
                 </property>
                 <property name="alignment">
-                 <set>Qt::AlignCenter</set>
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item row="0" column="0" rowspan="2">
-               <widget class="QLabel" name="label_21">
+               <widget class="QPushButton" name="onCamIcon">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>icons/camera.svg</normaloff>icons/camera.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>50</width>
+                  <height>50</height>
+                 </size>
                 </property>
                </widget>
               </item>
@@ -465,29 +602,53 @@
              </property>
              <layout class="QGridLayout" name="gridLayout_10">
               <item row="0" column="1">
-               <widget class="QLabel" name="label_22">
+               <widget class="QLabel" name="offCamLabel">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>Cameras (Offline)</string>
                 </property>
                 <property name="alignment">
-                 <set>Qt::AlignCenter</set>
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QLabel" name="label_23">
+               <widget class="QLabel" name="offCamCountLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>20</pointsize>
+                  <weight>50</weight>
+                  <italic>false</italic>
+                  <bold>false</bold>
+                 </font>
+                </property>
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>0</string>
                 </property>
                 <property name="alignment">
-                 <set>Qt::AlignCenter</set>
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item row="0" column="0" rowspan="2">
-               <widget class="QLabel" name="label_24">
+               <widget class="QPushButton" name="offCamIcon">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>icons/camera-off.svg</normaloff>icons/camera-off.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>50</width>
+                  <height>50</height>
+                 </size>
                 </property>
                </widget>
               </item>
@@ -499,11 +660,7 @@
         </item>
         <item>
          <widget class="QWidget" name="widget" native="true">
-          <layout class="QVBoxLayout" name="verticalLayout_8">
-           <item>
-            <widget class="QTableView" name="tableView"/>
-           </item>
-          </layout>
+          <layout class="QVBoxLayout" name="verticalLayout_8"/>
          </widget>
         </item>
        </layout>
@@ -514,15 +671,16 @@
          <widget class="QWidget" name="cam1Widget" native="true">
           <layout class="QVBoxLayout" name="verticalLayout_10">
            <item>
-            <widget class="QLabel" name="cam1Location">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+            <widget class="QLineEdit" name="cam1Location">
+             <property name="cursor">
+              <cursorShape>ArrowCursor</cursorShape>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: #2E2B3F;
+color: #fff;</string>
              </property>
              <property name="text">
-              <string>Web Camera</string>
+              <string>Webcam</string>
              </property>
             </widget>
            </item>
@@ -549,12 +707,13 @@
          <widget class="QWidget" name="cam2Widget" native="true">
           <layout class="QVBoxLayout" name="verticalLayout_11">
            <item>
-            <widget class="QLabel" name="cam2Location">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+            <widget class="QLineEdit" name="cam2Location">
+             <property name="cursor">
+              <cursorShape>ArrowCursor</cursorShape>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: #2E2B3F;
+color: #fff;</string>
              </property>
              <property name="text">
               <string>Camera 2</string>
@@ -584,12 +743,22 @@
          <widget class="QWidget" name="cam3Widget" native="true">
           <layout class="QVBoxLayout" name="verticalLayout_9">
            <item>
-            <widget class="QLabel" name="cam3Location">
+            <widget class="QLineEdit" name="cam3Location">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="cursor">
+              <cursorShape>ArrowCursor</cursorShape>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: #2E2B3F;
+color: #fff;</string>
+             </property>
+             <property name="inputMask">
+              <string/>
              </property>
              <property name="text">
               <string>Camera 3</string>
@@ -619,12 +788,13 @@
          <widget class="QWidget" name="cam4Widget" native="true">
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
-            <widget class="QLabel" name="cam4Location">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+            <widget class="QLineEdit" name="cam4Location">
+             <property name="cursor">
+              <cursorShape>ArrowCursor</cursorShape>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: #2E2B3F;
+color: #fff;</string>
              </property>
              <property name="text">
               <string>Camera 4</string>
@@ -818,11 +988,17 @@
            <item row="1" column="1">
             <widget class="QPushButton" name="addCameraButton">
              <property name="styleSheet">
-              <string notr="true">padding: 5px;
+              <string notr="true">*{
+padding: 5px;
 padding-right: 8px;
 border: 1px;
 background-color: #3a364f;
-border-radius: 10px;</string>
+border-radius: 5px;
+}
+
+#addCameraButton:hover{
+	background-color: #1e1c29;
+}</string>
              </property>
              <property name="text">
               <string>Add New Camera</string>

@@ -1,0 +1,7 @@
+TODO
+12/09/2024
+1. Change the database to save image with same date and time to _1, _2
+
+06/10/2024
+1. Offline camera does not +1 (Check solution in gpt)
+2. Change camera label name when change the content in textbox

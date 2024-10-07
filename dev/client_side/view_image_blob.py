@@ -7,7 +7,7 @@ conn = sqlite3.connect(r"C:\Users\yongt\Desktop\FYP Project\YOLOv8 Weapon Recogn
 cursor = conn.cursor()
 
 # Query to retrieve the image BLOB
-cursor.execute("SELECT image_data FROM detection_log WHERE id = ?", (48,))
+cursor.execute("SELECT image_data FROM detection_log WHERE id = ?", (94,))
 image_blob = cursor.fetchone()[0]
 
 # Convert the BLOB to an image
