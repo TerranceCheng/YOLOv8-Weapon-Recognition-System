@@ -3,8 +3,10 @@ import os
 import json
 import sqlite3
 from PyQt5 import QtWidgets, uic, QtCore
+from PyQt5.QtChart import QChart, QChartView, QPieSeries
+from PyQt5.QtGui import QPainter
 from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QMessageBox, QComboBox, QLineEdit, QLabel, QVBoxLayout, QDialogButtonBox, QDialog
+from PyQt5.QtWidgets import QMessageBox, QComboBox, QLineEdit, QLabel, QVBoxLayout, QDialogButtonBox, QDialog, QWidget
 from menu_buttons import MenuButtonsMixin  # Import the mixin
 from clickable_label import ClickableLabel  # Import the ClickableLabel class
 from datetime import datetime, timedelta
@@ -32,6 +34,7 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         # Reference the stacked widget and labels
         # Main Menu Page
         self.MainBodyStackedWidget = self.findChild(QtWidgets.QStackedWidget, 'MainBodyStackedWidget')
+        self.weaponTypeChart = self.findChild(QWidget, 'weaponTypeChart')  # Match the objectName
         self.NewDCountLabel = self.findChild(QtWidgets.QLabel, 'NewDCountLabel')
         self.ToBeRCountLabel = self.findChild(QtWidgets.QLabel, 'ToBeRCountLabel')
         self.onCamCountLabel = self.findChild(QtWidgets.QLabel, 'onCamCountLabel')
@@ -63,6 +66,9 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
 
         # Set up menu buttons using the mixin method
         self.setup_menu_buttons()
+
+        # Display the chart   
+        self.create_weapon_type_pie_chart()
 
         # Load saved camera settings
         self.load_camera_settings()
@@ -102,6 +108,60 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         # Update the labels again in case a camera status has changed
         self.onCamCountLabel.setText(str(working_camera_count))
         self.offCamCountLabel.setText(str(offline_camera_count))
+        
+    def create_weapon_type_pie_chart(self):
+        """Create a pie chart displaying the count of each weapon type detection within 1 month."""
+        # Connect to the database
+        conn = sqlite3.connect(DATABASE_PATH)
+        cursor = conn.cursor()
+
+        # Get the current date and calculate the date 1 month ago
+        today = datetime.now()
+        one_month_ago = today - timedelta(days=30)
+
+        # Query to count each weapon type detected in the last 1 month
+        cursor.execute("""
+            SELECT detected_weapon, COUNT(*) 
+            FROM detection_log 
+            WHERE detection_date >= ? 
+            GROUP BY detected_weapon
+        """, (one_month_ago,))
+        weapon_counts = cursor.fetchall()
+
+        # Close the database connection
+        conn.close()
+
+        # Create a QPieSeries for the pie chart
+        series = QPieSeries()
+
+        # Add the weapon types and their counts to the series
+        for weapon, count in weapon_counts:
+            series.append(weapon, count)
+
+        # Create a QChart and add the series to it
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setTitle("Weapon Types Detection (Last 1 Month)")
+
+        # Create a QChartView to display the chart
+        chart_view = QChartView(chart)
+        chart_view.setRenderHint(QPainter.Antialiasing)
+
+        # Ensure the weaponTypeChart widget has a layout
+        if self.weaponTypeChart.layout() is None:
+            layout = QVBoxLayout(self.weaponTypeChart)
+            self.weaponTypeChart.setLayout(layout)
+        else:
+            layout = self.weaponTypeChart.layout()
+        
+        # Clear any existing widgets in the layout
+        while layout.count():
+            child = layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+        # Add the new chart view to the layout
+        layout.addWidget(chart_view)
 
     def update_record_counts(self):
         """Query the database and update the QLabel widgets with the record counts."""
@@ -130,6 +190,8 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
 
         # Close the database connection
         conn.close()
+
+        self.create_weapon_type_pie_chart()
 
     def count_working_cameras(self):
         """Count the number of cameras currently providing video feeds and those offline."""
