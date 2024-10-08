@@ -28,6 +28,11 @@ class CamerasWindow(QtWidgets.QWidget):
         # Other initialization for camera labels
         self.cam1Label = cam1Label
         self.cam2Label = cam2Label
+        
+        # Prevent resizing of QLabel
+        self.cam1Label.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Ignored)
+        if self.cam2Label:
+            self.cam2Label.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Ignored)
 
         # Load YOLO model
         self.model = YOLO(MODEL_PATH)

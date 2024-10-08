@@ -4,9 +4,9 @@ import json
 import sqlite3
 from PyQt5 import QtWidgets, uic, QtCore
 from PyQt5.QtChart import QChart, QChartView, QPieSeries
-from PyQt5.QtGui import QPainter
-from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QMessageBox, QComboBox, QLineEdit, QLabel, QVBoxLayout, QDialogButtonBox, QDialog, QWidget
+from PyQt5.QtGui import QPainter, QBrush, QColor, QFont
+from PyQt5.QtCore import QTimer, QDate
+from PyQt5.QtWidgets import QMessageBox, QComboBox, QLineEdit, QLabel, QVBoxLayout, QDialogButtonBox, QDialog, QWidget, QDateEdit
 from menu_buttons import MenuButtonsMixin  # Import the mixin
 from clickable_label import ClickableLabel  # Import the ClickableLabel class
 from datetime import datetime, timedelta
@@ -34,11 +34,16 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         # Reference the stacked widget and labels
         # Main Menu Page
         self.MainBodyStackedWidget = self.findChild(QtWidgets.QStackedWidget, 'MainBodyStackedWidget')
-        self.weaponTypeChart = self.findChild(QWidget, 'weaponTypeChart')  # Match the objectName
+        self.weaponNumberChart = self.findChild(QWidget, 'weaponNumberChart')
+        self.weaponTypeChart = self.findChild(QWidget, 'weaponTypeChart')
         self.NewDCountLabel = self.findChild(QtWidgets.QLabel, 'NewDCountLabel')
         self.ToBeRCountLabel = self.findChild(QtWidgets.QLabel, 'ToBeRCountLabel')
         self.onCamCountLabel = self.findChild(QtWidgets.QLabel, 'onCamCountLabel')
         self.offCamCountLabel = self.findChild(QtWidgets.QLabel, 'offCamCountLabel')
+        self.summaryPeriodComboBox = self.findChild(QtWidgets.QComboBox, 'summaryPeriodComboBox')
+        self.totalDetectionLabel = self.findChild(QtWidgets.QLabel, 'totalDetectionLabel')
+        self.averageConfLabel = self.findChild(QtWidgets.QLabel, 'averageConfLabel')
+        self.commonWeaponLabel = self.findChild(QtWidgets.QLabel, 'commonWeaponLabel')
 
         # Cameras Page
         self.cam1Label = self.findChild(QtWidgets.QLabel, 'cam1Label')
@@ -74,8 +79,11 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         self.load_camera_settings()
 
         # Update record counts in labels
-        self.update_detection_stats()  # Add this call
-        
+        self.updateStatsAndGraph()  # Add this call
+
+        # Call on period changed when summaryPeriodComboBox change text
+        self.summaryPeriodComboBox.currentTextChanged.connect(self.onPeriodChanged)
+
         # Set up a timer to check the camera status every 2 seconds (2000 ms)
         self.camera_status_timer = QTimer(self)
         self.camera_status_timer.timeout.connect(self.check_camera_status)
@@ -84,35 +92,198 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         # Update the record counts in main menu page
         self.update_record_counts()
 
-    def update_detection_stats(self):
-        """Update the total number of detections, average confidence, and most common weapon."""
+    def onPeriodChanged(self, text):
+        if text == "Custom":
+            self.showCustomDateRangePicker()
+        else:
+            # Update stats and graph based on the selected period
+            self.updateStatsAndGraph()
+
+    def showCustomDateRangePicker(self):
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Select a date range")  # Set the window title
+        layout = QVBoxLayout()
+
+        # Create DateEdit widgets with default dates set to today
+        start_date = QDateEdit(calendarPopup=True)
+        end_date = QDateEdit(calendarPopup=True)
+        today = QDate.currentDate()  # Get today's date
+        start_date.setDate(today)  # Set default start date to today
+        end_date.setDate(today)    # Set default end date to today
+        
+        # Disable dates after today
+        start_date.setMaximumDate(today)
+        end_date.setMaximumDate(today)
+
+        start_date.setDisplayFormat("yyyy-MM-dd")
+        end_date.setDisplayFormat("yyyy-MM-dd")
+
+        layout.addWidget(QLabel("Start Date:"))
+        layout.addWidget(start_date)
+        layout.addWidget(QLabel("End Date:"))
+        layout.addWidget(end_date)
+        
+        button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        button_box.accepted.connect(dialog.accept)
+        button_box.rejected.connect(dialog.reject)
+        layout.addWidget(button_box)
+
+        # Set stylesheet for black font color for all widgets in the dialog
+        dialog.setStyleSheet("QWidget { color: black; }")  # Apply black color to all text in dialog
+
+        dialog.setLayout(layout)
+        
+        # Connect the date change signal to update the end date minimum
+        start_date.dateChanged.connect(lambda date: end_date.setMinimumDate(date))
+        
+        if dialog.exec_() == QDialog.Accepted:
+            start = start_date.date().toString("yyyy-MM-dd")
+            end = end_date.date().toString("yyyy-MM-dd")
+            self.updateStatsAndGraph(custom_range=(start, end))
+
+    def updateStatsAndGraph(self, custom_range=None):
+        selected_period = self.summaryPeriodComboBox.currentText()
+
+        if custom_range:
+            start_date, end_date = custom_range
+            # Fetch and update data for custom date range
+            self.updateDataFromDatabase(start_date, end_date)
+            self.create_weapon_type_pie_chart(start_date, end_date)  # Call with custom range
+        elif selected_period == "Day":
+            today = QDate.currentDate().toString("yyyy-MM-dd")
+            self.updateDataFromDatabase(today, today)
+            self.create_weapon_type_pie_chart(today, today)  # Call with today's date
+        elif selected_period == "Month":
+            first_day_of_month = QDate.currentDate().toString("yyyy-MM-01")
+            today = QDate.currentDate().toString("yyyy-MM-dd")
+            self.updateDataFromDatabase(first_day_of_month, today)
+            self.create_weapon_type_pie_chart(first_day_of_month, today)  # Call with month range
+        elif selected_period == "Year":
+            first_day_of_year = QDate.currentDate().toString("yyyy-01-01")
+            today = QDate.currentDate().toString("yyyy-MM-dd")
+            self.updateDataFromDatabase(first_day_of_year, today)
+            self.create_weapon_type_pie_chart(first_day_of_year, today)  # Call with year range
+
+    def updateDataFromDatabase(self, start_date, end_date):
+        """Fetch detection stats and graph data between start_date and end_date from the database."""
+        
         # Connect to the database
         conn = sqlite3.connect(DATABASE_PATH)
         cursor = conn.cursor()
 
-        # Query to get the total number of detections
-        cursor.execute("SELECT COUNT(*) FROM detection_log")
+        # Query to get the total number of detections within the date range
+        cursor.execute("""
+            SELECT COUNT(*) FROM detection_log 
+            WHERE detection_date BETWEEN ? AND ?
+        """, (start_date, end_date))
         total_detections = cursor.fetchone()[0]
         self.totalDetectionLabel.setText(str(total_detections))
 
-        # Query to calculate the average detection confidence
-        cursor.execute("SELECT AVG(detection_confidence) FROM detection_log")
+        # Query to calculate the average detection confidence within the date range
+        cursor.execute("""
+            SELECT AVG(detection_confidence) FROM detection_log 
+            WHERE detection_date BETWEEN ? AND ?
+        """, (start_date, end_date))
         average_confidence = cursor.fetchone()[0]
-        self.averageConfLabel.setText(f"{average_confidence:.2f}" if average_confidence else "N/A")
+        self.averageConfLabel.setText(f"{average_confidence:.2f}%" if average_confidence else "N/A")
 
-        # Query to find the most common weapon detected
+        # Query to find the most common weapon detected within the date range
         cursor.execute("""
             SELECT detected_weapon, COUNT(*) as count 
             FROM detection_log 
+            WHERE detection_date BETWEEN ? AND ? 
             GROUP BY detected_weapon 
             ORDER BY count DESC 
             LIMIT 1
-        """)
+        """, (start_date, end_date))
         common_weapon = cursor.fetchone()
         self.commonWeaponLabel.setText(common_weapon[0] if common_weapon else "N/A")
 
         # Close the database connection
+        conn.close() 
+
+    def create_weapon_type_pie_chart(self, start_date=None, end_date=None):
+        """Create a pie chart displaying the count of each weapon type detection based on the selected date range."""
+        # Connect to the database
+        conn = sqlite3.connect(DATABASE_PATH)
+        cursor = conn.cursor()
+
+        if start_date and end_date:
+            # Query to count each weapon type detected in the specified date range
+            cursor.execute("""
+                SELECT detected_weapon, COUNT(*) 
+                FROM detection_log 
+                WHERE detection_date BETWEEN ? AND ? 
+                GROUP BY detected_weapon
+            """, (start_date, end_date))
+        else:
+            # Get the current date and calculate the date 1 month ago
+            today = datetime.now()
+            one_month_ago = today - timedelta(days=30)
+
+            # Query to count each weapon type detected in the last month
+            cursor.execute("""
+                SELECT detected_weapon, COUNT(*) 
+                FROM detection_log 
+                WHERE detection_date >= ? 
+                GROUP BY detected_weapon
+            """, (one_month_ago,))
+
+        weapon_counts = cursor.fetchall()
+
+        # Close the database connection
         conn.close()
+
+        # Create a QPieSeries for the pie chart
+        series = QPieSeries()
+
+        if weapon_counts:
+            # Add the weapon types and their counts to the series
+            for weapon, count in weapon_counts:
+                series.append(weapon, count)
+        else:
+            # Add a single entry for "No data found"
+            series.append("No data found", 1)  # Add a slice with a count of 1 for visibility
+
+        # Create a QChart and add the series to it
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setTitle("Weapon Types Detection")
+        chart.setTitleBrush(QBrush(QColor("#ffffff")))
+        chart.setBackgroundBrush(QBrush(QColor("#3a364f")))
+
+        # Customize legend markers to have white font
+        legend = chart.legend()
+        legend.setVisible(True)
+        
+        for marker in legend.markers():
+            marker.setLabelBrush(QBrush(QColor("#ffffff")))  # Set legend text color to white
+
+        # Resize the pie chart to make it bigger
+        chart.setMinimumSize(300, 300)  # Set minimum size for the chart (width, height)
+
+        # Create a QChartView to display the chart
+        chart_view = QChartView(chart)
+        chart_view.setRenderHint(QPainter.Antialiasing)
+
+        # Set the background color of the chart view
+        chart_view.setBackgroundBrush(QBrush(QColor("#3a364f")))
+
+        # Ensure the weaponNumberChart widget has a layout
+        if self.weaponNumberChart.layout() is None:
+            layout = QVBoxLayout(self.weaponNumberChart)
+            self.weaponNumberChart.setLayout(layout)
+        else:
+            layout = self.weaponNumberChart.layout()
+
+        # Clear any existing widgets in the layout
+        while layout.count():
+            child = layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+        # Add the new chart view to the layout
+        layout.addWidget(chart_view)
 
     def check_camera_status(self):
         """Periodically check the status of the cameras and update the labels."""
@@ -141,61 +312,7 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         # Update the labels again in case a camera status has changed
         self.onCamCountLabel.setText(str(working_camera_count))
         self.offCamCountLabel.setText(str(offline_camera_count))
-        
-    def create_weapon_type_pie_chart(self):
-        """Create a pie chart displaying the count of each weapon type detection within 1 month."""
-        # Connect to the database
-        conn = sqlite3.connect(DATABASE_PATH)
-        cursor = conn.cursor()
-
-        # Get the current date and calculate the date 1 month ago
-        today = datetime.now()
-        one_month_ago = today - timedelta(days=30)
-
-        # Query to count each weapon type detected in the last 1 month
-        cursor.execute("""
-            SELECT detected_weapon, COUNT(*) 
-            FROM detection_log 
-            WHERE detection_date >= ? 
-            GROUP BY detected_weapon
-        """, (one_month_ago,))
-        weapon_counts = cursor.fetchall()
-
-        # Close the database connection
-        conn.close()
-
-        # Create a QPieSeries for the pie chart
-        series = QPieSeries()
-
-        # Add the weapon types and their counts to the series
-        for weapon, count in weapon_counts:
-            series.append(weapon, count)
-
-        # Create a QChart and add the series to it
-        chart = QChart()
-        chart.addSeries(series)
-        chart.setTitle("Weapon Types Detection (Last 1 Month)")
-
-        # Create a QChartView to display the chart
-        chart_view = QChartView(chart)
-        chart_view.setRenderHint(QPainter.Antialiasing)
-
-        # Ensure the weaponTypeChart widget has a layout
-        if self.weaponTypeChart.layout() is None:
-            layout = QVBoxLayout(self.weaponTypeChart)
-            self.weaponTypeChart.setLayout(layout)
-        else:
-            layout = self.weaponTypeChart.layout()
-        
-        # Clear any existing widgets in the layout
-        while layout.count():
-            child = layout.takeAt(0)
-            if child.widget():
-                child.widget().deleteLater()
-
-        # Add the new chart view to the layout
-        layout.addWidget(chart_view)
-
+    
     def update_record_counts(self):
         """Query the database and update the QLabel widgets with the record counts."""
         # Connect to the database
@@ -254,29 +371,6 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         offline_cameras = total_cameras - working_cameras
         return working_cameras, offline_cameras
 
-    def edit_location_dialog(self, event):
-        """Open dialog to edit the content of the clicked cam location label."""
-        label = self.sender()
-        dialog = QDialog(self)
-        dialog.setWindowTitle("Edit Location")
-        layout = QVBoxLayout(dialog)
-
-        line_edit = QLineEdit(dialog)
-        line_edit.setText(label.text())  # Pre-fill with the current text
-        layout.addWidget(line_edit)
-
-        button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, dialog)
-        layout.addWidget(button_box)
-
-        button_box.accepted.connect(dialog.accept)
-        button_box.rejected.connect(dialog.reject)
-
-        result = dialog.exec_()
-
-        if result == QDialog.Accepted:
-            label.setText(line_edit.text())  # Update label text if OK is pressed
-            self.save_camera_settings()  # Save settings after editing
-
     def setup_menu_buttons(self):
         # Connect buttons to respective pages
         self.MainMenuButton.clicked.connect(lambda: self.display_page(0, self.MainMenuButton))
@@ -297,6 +391,7 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         if page_index == 0:  # Main Menu index is 0
             self.update_record_counts()
             self.count_working_cameras()
+            self.updateStatsAndGraph()
 
     def reset_button_colors(self):
         # Reset button colors to default

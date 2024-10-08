@@ -1,10 +1,16 @@
 TODO
 12/09/2024
-1. Change the database to save image with same date and time to _1, _2
+1. Change the database to save image with same date and time to _1, _2, DONE
 
 06/10/2024
-1. Offline camera does not +1 (Check solution in gpt)
-2. Change camera label name when change the content in textbox
+1. Offline camera does not +1 (Check solution in gpt), DONE
+2. Change camera label name when change the content in textbox, DONE
 
 07/10/2024
 1. Chart should remove background
+
+08/10/2024
+1. Chart should display empty chart when no database, DONE
+2. Do detection log next
+3. Add labels to pie
+4. Add titles to the components in main menu
