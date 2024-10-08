@@ -73,6 +73,9 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         # Load saved camera settings
         self.load_camera_settings()
 
+        # Update record counts in labels
+        self.update_detection_stats()  # Add this call
+        
         # Set up a timer to check the camera status every 2 seconds (2000 ms)
         self.camera_status_timer = QTimer(self)
         self.camera_status_timer.timeout.connect(self.check_camera_status)
@@ -80,6 +83,36 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
 
         # Update the record counts in main menu page
         self.update_record_counts()
+
+    def update_detection_stats(self):
+        """Update the total number of detections, average confidence, and most common weapon."""
+        # Connect to the database
+        conn = sqlite3.connect(DATABASE_PATH)
+        cursor = conn.cursor()
+
+        # Query to get the total number of detections
+        cursor.execute("SELECT COUNT(*) FROM detection_log")
+        total_detections = cursor.fetchone()[0]
+        self.totalDetectionLabel.setText(str(total_detections))
+
+        # Query to calculate the average detection confidence
+        cursor.execute("SELECT AVG(detection_confidence) FROM detection_log")
+        average_confidence = cursor.fetchone()[0]
+        self.averageConfLabel.setText(f"{average_confidence:.2f}" if average_confidence else "N/A")
+
+        # Query to find the most common weapon detected
+        cursor.execute("""
+            SELECT detected_weapon, COUNT(*) as count 
+            FROM detection_log 
+            GROUP BY detected_weapon 
+            ORDER BY count DESC 
+            LIMIT 1
+        """)
+        common_weapon = cursor.fetchone()
+        self.commonWeaponLabel.setText(common_weapon[0] if common_weapon else "N/A")
+
+        # Close the database connection
+        conn.close()
 
     def check_camera_status(self):
         """Periodically check the status of the cameras and update the labels."""
