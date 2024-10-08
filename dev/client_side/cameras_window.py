@@ -29,11 +29,6 @@ class CamerasWindow(QtWidgets.QWidget):
         self.cam1Label = cam1Label
         self.cam2Label = cam2Label
 
-        # Prevent resizing of QLabel
-        self.cam1Label.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Ignored)
-        if self.cam2Label:
-            self.cam2Label.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Ignored)
-
         # Load YOLO model
         self.model = YOLO(MODEL_PATH)
 
@@ -108,7 +103,7 @@ class CamerasWindow(QtWidgets.QWidget):
                         QtCore.QTimer.singleShot(self.sound_duration, self.reset_sound_flag)
 
                     # Save detection to database (with deduplication)
-                    self.save_detection_to_db(frame, self.model.names[int(cls)], conf, location)
+                    self.save_detection_to_db(frame, self.model.names[int(cls)], conf*100, location)
 
         # Convert frame to display format
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -145,6 +140,7 @@ class CamerasWindow(QtWidgets.QWidget):
             now = datetime.now()
             detection_date = now.strftime("%Y-%m-%d")
             detection_time = now.strftime("%H:%M:%S")
+            detection_confidence = confidence
             image_name = f"{location}_{detection_date}_{detection_time}"
 
             # Deduplication logic: skip insert if detection occurred within 1 second for the same weapon and location
@@ -160,12 +156,12 @@ class CamerasWindow(QtWidgets.QWidget):
 
             # Prepare the SQL query
             query = """
-            INSERT INTO detection_log (detected_weapon, location, detection_date, detection_time, image_name, image_data, checked)
-            VALUES (?, ?, ?, ?, ?, ?, ?);
+            INSERT INTO detection_log (detected_weapon, location, detection_date, detection_time, detection_confidence, image_name, image_data, checked)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?);
             """
             checked = 0
             cursor = self.conn.cursor()
-            cursor.execute(query, (weapon_name, location, detection_date, detection_time, image_name, image_data, checked))
+            cursor.execute(query, (weapon_name, location, detection_date, detection_time, detection_confidence, image_name, image_data, checked))
             self.conn.commit()
 
             # Update the last detection time
