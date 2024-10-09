@@ -7,10 +7,17 @@ TODO
 2. Change camera label name when change the content in textbox, DONE
 
 07/10/2024
-1. Chart should remove background
+1. Chart should remove background, DONE
 
 08/10/2024
 1. Chart should display empty chart when no database, DONE
 2. Do detection log next
-3. Add labels to pie
+3. Add labels to pie, DONE
 4. Add titles to the components in main menu
+
+09/10/2024
+1. Align the pie chart to center, DONE
+2. chart's label should be white color, DONE
+3. slide = label, make sure to change the name: number, DONE
+4. Stats label alignment error, DONE
+5. Refresh the detection log page on each navigation to the page

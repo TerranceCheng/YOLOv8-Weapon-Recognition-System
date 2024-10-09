@@ -2,15 +2,14 @@ import sys
 import os
 import json
 import sqlite3
-from PyQt5 import QtWidgets, uic, QtCore
+from PyQt5 import QtWidgets, uic
 from PyQt5.QtChart import QChart, QChartView, QPieSeries
-from PyQt5.QtGui import QPainter, QBrush, QColor, QFont
-from PyQt5.QtCore import QTimer, QDate
-from PyQt5.QtWidgets import QMessageBox, QComboBox, QLineEdit, QLabel, QVBoxLayout, QDialogButtonBox, QDialog, QWidget, QDateEdit
+from PyQt5.QtGui import QPainter, QBrush, QColor
+from PyQt5.QtCore import QTimer, QDate, Qt, QMargins
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QDialogButtonBox, QDialog, QWidget, QDateEdit, QHeaderView
+from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery, QSqlQueryModel
 from menu_buttons import MenuButtonsMixin  # Import the mixin
-from clickable_label import ClickableLabel  # Import the ClickableLabel class
 from datetime import datetime, timedelta
-import cv2
 
 # Import the page classes
 from cameras_window import CamerasWindow
@@ -24,6 +23,31 @@ script_path = os.path.abspath(__file__)
 file_dir = os.path.split(script_path)[0]
 ui_file = os.path.join(file_dir, 'UI/main_menu.ui')
 json_file = os.path.join(file_dir, 'resources/cameras.json')
+
+class ReadOnlySqlTableModel(QSqlTableModel):
+    def data(self, index, role=Qt.DisplayRole):
+        # Handle text alignment for all cells
+        if role == Qt.TextAlignmentRole:
+            return Qt.AlignCenter  # Center-align the text in all cells
+
+        # Handle the display format for the Detection Confidence column (column 5)
+        if role == Qt.DisplayRole and index.column() == 5:
+            # Retrieve the original data from the database
+            value = super().data(index, role)
+            try:
+                # Convert value to float and format it to 2 decimal places
+                value = float(value)
+                return "{:.2f}".format(value)
+            except (TypeError, ValueError):
+                # Handle case where value cannot be converted to float
+                return value
+
+        return super().data(index, role)
+    
+    def flags(self, index):
+        # Make all cells non-editable by removing the Qt.ItemIsEditable flag
+        flags = super().flags(index)
+        return flags & ~Qt.ItemIsEditable
 
 class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
     def __init__(self):
@@ -44,6 +68,7 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         self.totalDetectionLabel = self.findChild(QtWidgets.QLabel, 'totalDetectionLabel')
         self.averageConfLabel = self.findChild(QtWidgets.QLabel, 'averageConfLabel')
         self.commonWeaponLabel = self.findChild(QtWidgets.QLabel, 'commonWeaponLabel')
+        self.recentDetectionTable = self.findChild(QtWidgets.QTableView, 'recentDetectionTable')
 
         # Cameras Page
         self.cam1Label = self.findChild(QtWidgets.QLabel, 'cam1Label')
@@ -54,10 +79,13 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         self.cam3Location = self.findChild(QtWidgets.QLineEdit, 'cam3Location')
         self.cam4Location = self.findChild(QtWidgets.QLineEdit, 'cam4Location')
 
+        # Detection Log Page
+        self.detectionLogTable = self.findChild(QtWidgets.QTableView, 'detectionLogTable')
+
         # Create instances of each page
         self.main_menu_page = QtWidgets.QWidget()
         self.cameras_page = CamerasWindow(self.cam1Label, self.cam2Label, self.addCameraButton, self.cam1Location, self.cam2Location, self.cam3Location, self.cam4Location)
-        self.detection_log_page = DetectionLogWindow()
+        self.detection_log_page = DetectionLogWindow(self.detectionLogTable)
         self.settings_page = SettingsWindow()
 
         # Add pages to the stacked widget
@@ -72,14 +100,15 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         # Set up menu buttons using the mixin method
         self.setup_menu_buttons()
 
-        # Display the chart   
-        self.create_weapon_type_pie_chart()
-
         # Load saved camera settings
         self.load_camera_settings()
 
-        # Update record counts in labels
-        self.updateStatsAndGraph()  # Add this call
+        # Display the chart and stats
+        self.create_weapon_type_pie_chart()
+        self.updateStatsAndGraph()
+
+        # Set up the database and populate the table view
+        self.setupDatabase()  
 
         # Call on period changed when summaryPeriodComboBox change text
         self.summaryPeriodComboBox.currentTextChanged.connect(self.onPeriodChanged)
@@ -217,17 +246,16 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
                 GROUP BY detected_weapon
             """, (start_date, end_date))
         else:
-            # Get the current date and calculate the date 1 month ago
-            today = datetime.now()
-            one_month_ago = today - timedelta(days=30)
+            # Get the current date and calculate the date today
+            today = QDate.currentDate().toString("yyyy-MM-dd")
 
             # Query to count each weapon type detected in the last month
             cursor.execute("""
                 SELECT detected_weapon, COUNT(*) 
                 FROM detection_log 
-                WHERE detection_date >= ? 
+                WHERE detection_date BETWEEN ? AND ?  
                 GROUP BY detected_weapon
-            """, (one_month_ago,))
+            """, (today, today))
 
         weapon_counts = cursor.fetchall()
 
@@ -240,27 +268,41 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         if weapon_counts:
             # Add the weapon types and their counts to the series
             for weapon, count in weapon_counts:
-                series.append(weapon, count)
+                slice = series.append(weapon, count)
+                slice.setLabel(f"{weapon}: {count}")  # Set label with weapon name and count
+                slice.setLabelBrush(QBrush(QColor("#ffffff")))
+                slice.setLabelVisible(True)  # Make the label visible
         else:
             # Add a single entry for "No data found"
-            series.append("No data found", 1)  # Add a slice with a count of 1 for visibility
+            slice = series.append("No detection found", 1)
+
+        selected_period = self.summaryPeriodComboBox.currentText()
 
         # Create a QChart and add the series to it
         chart = QChart()
         chart.addSeries(series)
-        chart.setTitle("Weapon Types Detection")
+        if selected_period == 'Custom':
+            chart.setTitle(f"Weapon Types Detection ({start_date} to {end_date})")
+        else:
+            chart.setTitle(f"Weapon Types Detection ({selected_period})")
+
         chart.setTitleBrush(QBrush(QColor("#ffffff")))
         chart.setBackgroundBrush(QBrush(QColor("#3a364f")))
+
+        # Set chart margins to 0 to remove extra space at the edges
+        chart.setMargins(QMargins(0, 0, 0, 0))
 
         # Customize legend markers to have white font
         legend = chart.legend()
         legend.setVisible(True)
-        
+
         for marker in legend.markers():
+            weapon = marker.slice().label().split(":")[0]  # Extract weapon name
+            marker.setLabel(weapon)  # Set only the weapon name in the legend
             marker.setLabelBrush(QBrush(QColor("#ffffff")))  # Set legend text color to white
 
         # Resize the pie chart to make it bigger
-        chart.setMinimumSize(300, 300)  # Set minimum size for the chart (width, height)
+        chart.setMinimumSize(400, 400)  # Set minimum size for the chart (width, height)
 
         # Create a QChartView to display the chart
         chart_view = QChartView(chart)
@@ -282,8 +324,12 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
             if child.widget():
                 child.widget().deleteLater()
 
-        # Add the new chart view to the layout
-        layout.addWidget(chart_view)
+        # Set padding and margins to 0 for the layout
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+
+        # Add the new chart view to the layout with alignment to center
+        layout.addWidget(chart_view, alignment=Qt.AlignCenter)
 
     def check_camera_status(self):
         """Periodically check the status of the cameras and update the labels."""
@@ -415,6 +461,68 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         }
         with open(json_file, 'w') as file:
             json.dump(data, file, indent=4)
+
+    def setupDatabase(self):
+        # Create a connection to the SQLite database
+        self.db = QSqlDatabase.addDatabase('QSQLITE')
+        self.db.setDatabaseName(r'C:\Users\yongt\Desktop\FYP Project\YOLOv8 Weapon Recognition System\dev\db.sqlite3')
+
+        if not self.db.open():
+            print("Unable to open database")
+            return
+
+        # Create a model
+        self.model = QSqlQueryModel(self)  # Change to QSqlQueryModel for custom queries
+
+        # Prepare a query to select only 15 records from the detection_log table
+        query = QSqlQuery("SELECT id, location, detection_date, detection_time, detected_weapon, detection_confidence, image_name FROM detection_log LIMIT 15")
+
+        # Execute the query and set it in the model
+        if query.exec_():
+            self.model = ReadOnlySqlTableModel(self)  # Use your custom model
+            self.model.setQuery(query)  # Set the executed query in your model
+
+            # Set headers (ensure they match the database columns)
+            self.model.setHeaderData(0, Qt.Horizontal, "No.")  # id
+            self.model.setHeaderData(1, Qt.Horizontal, "Location")
+            self.model.setHeaderData(2, Qt.Horizontal, "Detection Date")
+            self.model.setHeaderData(3, Qt.Horizontal, "Detection Time")
+            self.model.setHeaderData(4, Qt.Horizontal, "Detected Weapon")
+            self.model.setHeaderData(5, Qt.Horizontal, "Detection Confidence (%)")
+            self.model.setHeaderData(6, Qt.Horizontal, "Image Name")
+
+            # Set the model to the QTableView
+            self.recentDetectionTable.setModel(self.model)
+
+            # Hide the primary key and image data columns
+            self.recentDetectionTable.hideColumn(0)  # Hide the id column
+            self.recentDetectionTable.hideColumn(6)  # Hide the image_name
+
+            # Resize columns based on percentage
+            header = self.recentDetectionTable.horizontalHeader()
+            header.setSectionResizeMode(QHeaderView.Stretch)  # Stretch to fill space
+
+            # Set the background color and font color of the table
+            self.recentDetectionTable.setStyleSheet("""
+                QTableView {
+                    background-color: #3a364f;
+                    color: white;
+                    gridline-color: white;
+                }
+                QHeaderView::section {
+                    background-color: #3a364f;
+                    color: white;
+                }
+                QTableView::item:selected {
+                    background-color: #4c4a6f;
+                    color: white;
+                }
+                QTableCornerButton::section {
+                    background-color: #3a364f;  /* Top left corner button */
+                }
+            """)
+        else:
+            print("Query execution failed")
 
 def main():
     # Initialize the Qt application

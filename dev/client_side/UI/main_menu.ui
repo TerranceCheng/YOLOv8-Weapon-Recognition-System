@@ -355,14 +355,29 @@
 }</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="MainMenuPage">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <item alignment="Qt::AlignTop">
          <widget class="QWidget" name="statsContainer" native="true">
           <property name="styleSheet">
-           <string notr="true">#NewDCountLabel{
+           <string notr="true"/>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QWidget" name="widget_3" native="true">
+             <property name="styleSheet">
+              <string notr="true">#NewDCountLabel{
 	font: 20pt;
 }
 
@@ -382,338 +397,394 @@
 background-color: #3a364f;
 }
 </string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QFrame" name="newDetectionFrame_2">
-             <property name="enabled">
-              <bool>true</bool>
              </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_8">
-              <item row="1" column="1">
-               <widget class="QLabel" name="NewDCountLabel">
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QFrame" name="newDetectionFrame_2">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="font">
-                 <font>
-                  <pointsize>20</pointsize>
-                  <weight>50</weight>
-                  <italic>false</italic>
-                  <bold>false</bold>
-                 </font>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
                 </property>
-                <property name="styleSheet">
-                 <string notr="true">font: 20pt;</string>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
                 </property>
-                <property name="text">
-                 <string>0</string>
-                </property>
-                <property name="textFormat">
-                 <enum>Qt::PlainText</enum>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                </property>
-                <property name="wordWrap">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="NewDLabel">
-                <property name="text">
-                 <string>New Detection (7 Days)</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                </property>
-                <property name="wordWrap">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0" rowspan="2">
-               <widget class="QPushButton" name="pushButton">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">margin-left: 10px;
+                <layout class="QGridLayout" name="gridLayout_8">
+                 <item row="0" column="0" rowspan="2">
+                  <widget class="QPushButton" name="pushButton">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">margin-left: 10px;
 margin-right: 10px;</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset>
-                  <normaloff>icons/crosshair.svg</normaloff>icons/crosshair.svg</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>50</width>
-                  <height>50</height>
-                 </size>
-                </property>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>icons/crosshair.svg</normaloff>icons/crosshair.svg</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>50</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="NewDLabel">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>91</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>91</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true"/>
+                   </property>
+                   <property name="text">
+                    <string>New Detections (7 Days)</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLabel" name="NewDCountLabel">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>20</pointsize>
+                     <weight>50</weight>
+                     <italic>false</italic>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font: 20pt;</string>
+                   </property>
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                   <property name="textFormat">
+                    <enum>Qt::PlainText</enum>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QFrame" name="ToBeReviewedFrame_2">
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_7">
-              <item row="0" column="1">
-               <widget class="QLabel" name="ToBeRLabel">
-                <property name="text">
-                 <string>To Be Reviewed Detections (7 Days)</string>
+              <item>
+               <widget class="QFrame" name="ToBeReviewedFrame_2">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
                 </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
                 </property>
-                <property name="wordWrap">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLabel" name="ToBeRCountLabel">
-                <property name="font">
-                 <font>
-                  <pointsize>20</pointsize>
-                  <weight>50</weight>
-                  <italic>false</italic>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>0</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                </property>
-                <property name="wordWrap">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0" rowspan="2">
-               <widget class="QPushButton" name="ToBeRIcon">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">margin-left: 10px;
+                <layout class="QGridLayout" name="gridLayout_7">
+                 <item row="0" column="0" rowspan="2">
+                  <widget class="QPushButton" name="ToBeRIcon">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">margin-left: 10px;
 margin-right: 10px;</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset>
-                  <normaloff>icons/alert-triangle.svg</normaloff>icons/alert-triangle.svg</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>50</width>
-                  <height>50</height>
-                 </size>
-                </property>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>icons/alert-triangle.svg</normaloff>icons/alert-triangle.svg</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>50</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="ToBeRLabel">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>115</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>115</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>To Be Reviewed Detections (7 Days)</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLabel" name="ToBeRCountLabel">
+                   <property name="font">
+                    <font>
+                     <pointsize>20</pointsize>
+                     <weight>50</weight>
+                     <italic>false</italic>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QFrame" name="OnlineCamerasFrame_2">
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_9">
-              <item row="0" column="1">
-               <widget class="QLabel" name="onCamLabel">
-                <property name="text">
-                 <string>Cameras (Online)</string>
+              <item>
+               <widget class="QFrame" name="OnlineCamerasFrame_2">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
                 </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
                 </property>
-                <property name="wordWrap">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLabel" name="onCamCountLabel">
-                <property name="font">
-                 <font>
-                  <pointsize>20</pointsize>
-                  <weight>50</weight>
-                  <italic>false</italic>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>0</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                </property>
-                <property name="wordWrap">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0" rowspan="2">
-               <widget class="QPushButton" name="onCamIcon">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">margin-left: 10px;
+                <layout class="QGridLayout" name="gridLayout_9">
+                 <item row="0" column="1" alignment="Qt::AlignTop">
+                  <widget class="QLabel" name="onCamLabel">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>105</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>105</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Cameras (Online)</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1" alignment="Qt::AlignBottom">
+                  <widget class="QLabel" name="onCamCountLabel">
+                   <property name="font">
+                    <font>
+                     <pointsize>20</pointsize>
+                     <weight>50</weight>
+                     <italic>false</italic>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0" rowspan="2">
+                  <widget class="QPushButton" name="onCamIcon">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">margin-left: 10px;
 margin-right: 10px;</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset>
-                  <normaloff>icons/camera.svg</normaloff>icons/camera.svg</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>50</width>
-                  <height>50</height>
-                 </size>
-                </property>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>icons/camera.svg</normaloff>icons/camera.svg</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>50</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QFrame" name="OfflineCamerasFrame_2">
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_10">
-              <item row="0" column="1">
-               <widget class="QLabel" name="offCamLabel">
-                <property name="text">
-                 <string>Cameras (Offline)</string>
+              <item>
+               <widget class="QFrame" name="OfflineCamerasFrame_2">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
                 </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
                 </property>
-                <property name="wordWrap">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLabel" name="offCamCountLabel">
-                <property name="font">
-                 <font>
-                  <pointsize>20</pointsize>
-                  <weight>50</weight>
-                  <italic>false</italic>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>0</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                </property>
-                <property name="wordWrap">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0" rowspan="2">
-               <widget class="QPushButton" name="offCamIcon">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">margin-left: 10px;
+                <layout class="QGridLayout" name="gridLayout_10">
+                 <item row="0" column="0" rowspan="2">
+                  <widget class="QPushButton" name="offCamIcon">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">margin-left: 10px;
 margin-right: 10px;</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset>
-                  <normaloff>icons/camera-off.svg</normaloff>icons/camera-off.svg</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>50</width>
-                  <height>50</height>
-                 </size>
-                </property>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>icons/camera-off.svg</normaloff>icons/camera-off.svg</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>50</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="offCamLabel">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>104</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>104</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Cameras (Offline)</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLabel" name="offCamCountLabel">
+                   <property name="font">
+                    <font>
+                     <pointsize>20</pointsize>
+                     <weight>50</weight>
+                     <italic>false</italic>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
             </widget>
            </item>
           </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="Line" name="line">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">color: white;</string>
-          </property>
-          <property name="lineWidth">
-           <number>5</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
          </widget>
         </item>
         <item>
@@ -725,18 +796,116 @@ margin-right: 10px;</string>
            </sizepolicy>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
+           <property name="topMargin">
+            <number>0</number>
+           </property>
            <item row="1" column="0" colspan="2">
             <widget class="QWidget" name="recentDetectionWidget" native="true">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>250</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>350</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: #3a364f;</string>
+             </property>
              <layout class="QVBoxLayout" name="verticalLayout_13">
               <item>
                <widget class="QLabel" name="recentDetectionLabel">
+                <property name="styleSheet">
+                 <string notr="true">margin-bottom: 15px;
+font: 7pt, bold;</string>
+                </property>
                 <property name="text">
-                 <string>Recent Detection (100 Records)</string>
+                 <string>Recent Detection (15 Records)</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QTableView" name="recentDetectionTable"/>
+               <widget class="QTableView" name="recentDetectionTable">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>215</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>315</height>
+                 </size>
+                </property>
+                <property name="autoFillBackground">
+                 <bool>false</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::Panel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <property name="lineWidth">
+                 <number>0</number>
+                </property>
+                <property name="horizontalScrollBarPolicy">
+                 <enum>Qt::ScrollBarAsNeeded</enum>
+                </property>
+                <property name="sizeAdjustPolicy">
+                 <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+                </property>
+                <property name="autoScrollMargin">
+                 <number>8</number>
+                </property>
+                <property name="tabKeyNavigation">
+                 <bool>false</bool>
+                </property>
+                <property name="showDropIndicator" stdset="0">
+                 <bool>false</bool>
+                </property>
+                <property name="dragDropOverwriteMode">
+                 <bool>false</bool>
+                </property>
+                <property name="selectionMode">
+                 <enum>QAbstractItemView::SingleSelection</enum>
+                </property>
+                <property name="textElideMode">
+                 <enum>Qt::ElideMiddle</enum>
+                </property>
+                <property name="showGrid">
+                 <bool>false</bool>
+                </property>
+                <property name="sortingEnabled">
+                 <bool>true</bool>
+                </property>
+                <property name="cornerButtonEnabled">
+                 <bool>false</bool>
+                </property>
+                <attribute name="horizontalHeaderCascadingSectionResizes">
+                 <bool>false</bool>
+                </attribute>
+                <attribute name="horizontalHeaderHighlightSections">
+                 <bool>false</bool>
+                </attribute>
+                <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                 <bool>false</bool>
+                </attribute>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
+                <attribute name="verticalHeaderHighlightSections">
+                 <bool>false</bool>
+                </attribute>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -744,16 +913,10 @@ margin-right: 10px;</string>
            <item row="0" column="0">
             <widget class="QWidget" name="weaponNumberChart" native="true">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>397</width>
-               <height>252</height>
-              </size>
              </property>
              <property name="styleSheet">
               <string notr="true">background-color:&quot;#3a364f&quot;;</string>
@@ -905,6 +1068,9 @@ margin-right: 15px;</string>
                      <verstretch>0</verstretch>
                     </sizepolicy>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">font: 7pt, bold;</string>
+                   </property>
                    <property name="text">
                     <string>Summary Period:</string>
                    </property>
@@ -920,7 +1086,9 @@ margin-right: 15px;</string>
                    </property>
                    <property name="styleSheet">
                     <string notr="true">color: black;
-background-color: #fff;</string>
+background-color: #fff;
+padding-left: 10px;
+font: 8pt;</string>
                    </property>
                    <item>
                     <property name="text">
@@ -1023,7 +1191,8 @@ margin-right: 15px;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">background-color: #2E2B3F;
-color: #fff;</string>
+color: #fff;
+font: 9pt, bold;</string>
              </property>
              <property name="text">
               <string>Webcam</string>
@@ -1059,7 +1228,8 @@ color: #fff;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">background-color: #2E2B3F;
-color: #fff;</string>
+color: #fff;
+font: 9pt, bold;</string>
              </property>
              <property name="text">
               <string>Camera 2</string>
@@ -1101,7 +1271,8 @@ color: #fff;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">background-color: #2E2B3F;
-color: #fff;</string>
+color: #fff;
+font: 9pt, bold;</string>
              </property>
              <property name="inputMask">
               <string/>
@@ -1140,7 +1311,8 @@ color: #fff;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">background-color: #2E2B3F;
-color: #fff;</string>
+color: #fff;
+font: 9pt, bold;</string>
              </property>
              <property name="text">
               <string>Camera 4</string>
@@ -1281,6 +1453,10 @@ color: #fff;</string>
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="cameraCountLabel">
+             <property name="styleSheet">
+              <string notr="true">
+font: 10pt, bold;</string>
+             </property>
              <property name="text">
               <string>Layout:</string>
              </property>
@@ -1291,7 +1467,7 @@ color: #fff;</string>
              <property name="minimumSize">
               <size>
                <width>80</width>
-               <height>0</height>
+               <height>24</height>
               </size>
              </property>
              <property name="font">
@@ -1300,7 +1476,8 @@ color: #fff;</string>
               </font>
              </property>
              <property name="styleSheet">
-              <string notr="true">color: black;</string>
+              <string notr="true">color: black;
+padding-left: 10px;</string>
              </property>
              <property name="editable">
               <bool>false</bool>
@@ -1365,7 +1542,7 @@ border-radius: 5px;
         <item>
          <widget class="QLabel" name="detectionLogLabel">
           <property name="styleSheet">
-           <string notr="true">font: 10pt;
+           <string notr="true">font: 10pt, bold;
 margin-top: 20%;
 margin-bottom: 20%;</string>
           </property>
@@ -1376,12 +1553,48 @@ margin-bottom: 20%;</string>
         </item>
         <item>
          <widget class="QTableView" name="detectionLogTable">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="sizeAdjustPolicy">
+           <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+          </property>
+          <property name="tabKeyNavigation">
+           <bool>false</bool>
+          </property>
+          <property name="showDropIndicator" stdset="0">
+           <bool>false</bool>
+          </property>
+          <property name="dragDropOverwriteMode">
+           <bool>false</bool>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
           <property name="sortingEnabled">
            <bool>true</bool>
           </property>
           <property name="cornerButtonEnabled">
            <bool>false</bool>
           </property>
+          <attribute name="horizontalHeaderHighlightSections">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+           <bool>true</bool>
+          </attribute>
+          <attribute name="verticalHeaderHighlightSections">
+           <bool>false</bool>
+          </attribute>
          </widget>
         </item>
        </layout>
