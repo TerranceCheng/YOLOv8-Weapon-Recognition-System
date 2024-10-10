@@ -84,26 +84,6 @@ class DetectionLogWindow(QtWidgets.QWidget):
             header = self.detectionLogTable.horizontalHeader()
             header.setSectionResizeMode(QHeaderView.Stretch)
 
-            # Set styles
-            self.detectionLogTable.setStyleSheet("""
-                QTableView {
-                    background-color: #3a364f;
-                    color: white;
-                    gridline-color: white;
-                }
-                QHeaderView::section {
-                    background-color: #3a364f;
-                    color: white;
-                }
-                QTableView::item:selected {
-                    background-color: #4c4a6f;
-                    color: white;
-                }
-                QTableCornerButton::section {
-                    background-color: #3a364f;  /* Top left corner button */
-                }
-            """)
-
             # Add 'View Image' buttons
             self.add_view_image_buttons()
 
