@@ -501,26 +501,7 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
             # Resize columns based on percentage
             header = self.recentDetectionTable.horizontalHeader()
             header.setSectionResizeMode(QHeaderView.Stretch)  # Stretch to fill space
-
-            # Set the background color and font color of the table
-            self.recentDetectionTable.setStyleSheet("""
-                QTableView {
-                    background-color: #3a364f;
-                    color: white;
-                    gridline-color: white;
-                }
-                QHeaderView::section {
-                    background-color: #3a364f;
-                    color: white;
-                }
-                QTableView::item:selected {
-                    background-color: #4c4a6f;
-                    color: white;
-                }
-                QTableCornerButton::section {
-                    background-color: #3a364f;  /* Top left corner button */
-                }
-            """)
+            
         else:
             print("Query execution failed")
 
