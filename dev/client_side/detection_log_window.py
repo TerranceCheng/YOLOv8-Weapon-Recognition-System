@@ -68,7 +68,7 @@ class DetectionLogWindow(QtWidgets.QWidget):
             self.model.setHeaderData(2, Qt.Horizontal, "Detection Date")
             self.model.setHeaderData(3, Qt.Horizontal, "Detection Time")
             self.model.setHeaderData(4, Qt.Horizontal, "Detected Weapon")
-            self.model.setHeaderData(5, Qt.Horizontal, "Detection Confidence (%)")
+            self.model.setHeaderData(5, Qt.Horizontal, "Accuracy (%)")
             self.model.setHeaderData(6, Qt.Horizontal, "Image Name")
             self.model.setHeaderData(8, Qt.Horizontal, "Reviewed")  # Column for reviewed status
             self.model.setHeaderData(9, Qt.Horizontal, "Actions")  # Column for buttons
@@ -84,12 +84,32 @@ class DetectionLogWindow(QtWidgets.QWidget):
             header = self.detectionLogTable.horizontalHeader()
             header.setSectionResizeMode(QHeaderView.Stretch)
 
+            # Increase each row height by 20%
+            self.increase_row_height()
+
             # Add 'View Image' buttons
             self.add_view_image_buttons()
+
+    def increase_row_height(self):
+        """Increase the height of each row by 20%."""
+        for row in range(self.model.rowCount()):
+            original_height = self.detectionLogTable.rowHeight(row)
+            increased_height = int(original_height * 1.5)  # Increase height by 20%
+            self.detectionLogTable.setRowHeight(row, increased_height)
 
     def add_view_image_buttons(self):
         for row in range(self.model.rowCount()):
             button = QPushButton("View Image")
+            button.setStyleSheet("""
+                QPushButton {
+                    font-size: 9pt;
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                }
+                QPushButton:hover {
+                    background-color: #1e1c29;
+                }
+            """)
             button.clicked.connect(lambda checked, row=row: self.view_image(row))  # Use default parameter to capture the current row
 
             # Create a widget for the button and set it in the table

@@ -1,1 +1,1 @@
-recentDetectionTable
+Accuracy (%)

@@ -4,7 +4,7 @@ import json
 import sqlite3
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtChart import QChart, QChartView, QPieSeries
-from PyQt5.QtGui import QPainter, QBrush, QColor
+from PyQt5.QtGui import QPainter, QBrush, QColor, QFont
 from PyQt5.QtCore import QTimer, QDate, Qt, QMargins
 from PyQt5.QtWidgets import QLabel, QVBoxLayout, QDialogButtonBox, QDialog, QWidget, QDateEdit, QHeaderView
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery, QSqlQueryModel
@@ -286,6 +286,12 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         else:
             chart.setTitle(f"Weapon Types Detection ({selected_period})")
 
+        # Set a 9pt font for all text elements
+        font = QFont()
+        font.setPointSize(9)
+
+        # Apply the font to the chart title
+        chart.setTitleFont(font)
         chart.setTitleBrush(QBrush(QColor("#ffffff")))
         chart.setBackgroundBrush(QBrush(QColor("#3a364f")))
 
@@ -295,14 +301,19 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
         # Customize legend markers to have white font
         legend = chart.legend()
         legend.setVisible(True)
+        legend.setFont(font)  # Set font size for the legend
 
         for marker in legend.markers():
             weapon = marker.slice().label().split(":")[0]  # Extract weapon name
             marker.setLabel(weapon)  # Set only the weapon name in the legend
             marker.setLabelBrush(QBrush(QColor("#ffffff")))  # Set legend text color to white
 
+        # Apply the 9pt font size to all pie slice labels
+        for slice in series.slices():
+            slice.setLabelFont(font)
+
         # Resize the pie chart to make it bigger
-        chart.setMinimumSize(400, 400)  # Set minimum size for the chart (width, height)
+        chart.setMinimumSize(300, 300)  # Set minimum size for the chart (width, height)
 
         # Create a QChartView to display the chart
         chart_view = QChartView(chart)
@@ -488,7 +499,7 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
             self.model.setHeaderData(2, Qt.Horizontal, "Detection Date")
             self.model.setHeaderData(3, Qt.Horizontal, "Detection Time")
             self.model.setHeaderData(4, Qt.Horizontal, "Detected Weapon")
-            self.model.setHeaderData(5, Qt.Horizontal, "Detection Confidence (%)")
+            self.model.setHeaderData(5, Qt.Horizontal, "Accuracy (%)")
             self.model.setHeaderData(6, Qt.Horizontal, "Image Name")
 
             # Set the model to the QTableView
@@ -501,7 +512,7 @@ class MainMenuWindow(QtWidgets.QMainWindow, MenuButtonsMixin):
             # Resize columns based on percentage
             header = self.recentDetectionTable.horizontalHeader()
             header.setSectionResizeMode(QHeaderView.Stretch)  # Stretch to fill space
-            
+
         else:
             print("Query execution failed")
 

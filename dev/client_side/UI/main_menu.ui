@@ -78,6 +78,10 @@
           <string notr="true">QPushButton:hover {
     background-color: #3a364f;  /* Background color on hover */
 }
+
+QPushButton {
+   font: 9pt;
+}
 </string>
          </property>
          <property name="frameShape">
@@ -151,7 +155,8 @@
              <item>
               <widget class="QLabel" name="WelcomeLabel">
                <property name="styleSheet">
-                <string notr="true">Color: white;</string>
+                <string notr="true">Color: white;
+Font: 9pt;</string>
                </property>
                <property name="text">
                 <string>Welcome, </string>
@@ -355,7 +360,7 @@
 }</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="MainMenuPage">
        <property name="styleSheet">
@@ -820,8 +825,8 @@ margin-right: 10px;</string>
               <item>
                <widget class="QLabel" name="recentDetectionLabel">
                 <property name="styleSheet">
-                 <string notr="true">margin-bottom: 15px;
-font: 7pt, bold;</string>
+                 <string notr="true">margin-bottom: 10px;
+font: 9pt;</string>
                 </property>
                 <property name="text">
                  <string>Recent Detection (15 Records)</string>
@@ -835,10 +840,12 @@ font: 7pt, bold;</string>
                     background-color: #3a364f;
                     color: white;
                     gridline-color: white;
+					font: 9pt;
                 }
                 QHeaderView::section {
                     background-color: #3a364f;
                     color: white;
+					font: 9pt;
                 }
                 QTableView::item:selected {
                     background-color: #4c4a6f;
@@ -950,6 +957,9 @@ margin-right: 15px;</string>
                      <verstretch>0</verstretch>
                     </sizepolicy>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">font: 9pt;</string>
+                   </property>
                    <property name="text">
                     <string>Total Detected Weapon: </string>
                    </property>
@@ -1009,6 +1019,9 @@ margin-right: 15px;</string>
                      <verstretch>0</verstretch>
                     </sizepolicy>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">font: 9pt;</string>
+                   </property>
                    <property name="text">
                     <string>Most commonly detected weapon: </string>
                    </property>
@@ -1045,7 +1058,7 @@ margin-right: 15px;</string>
                     </sizepolicy>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">font: 7pt, bold;</string>
+                    <string notr="true">font: 9pt;</string>
                    </property>
                    <property name="text">
                     <string>Summary Period:</string>
@@ -1064,7 +1077,7 @@ margin-right: 15px;</string>
                     <string notr="true">color: black;
 background-color: #fff;
 padding-left: 10px;
-font: 8pt;</string>
+font: 9pt;</string>
                    </property>
                    <item>
                     <property name="text">
@@ -1129,6 +1142,9 @@ margin-right: 15px;</string>
                      <verstretch>0</verstretch>
                     </sizepolicy>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">font: 9pt;</string>
+                   </property>
                    <property name="text">
                     <string>Average Detection Confidence (%):</string>
                    </property>
@@ -1168,7 +1184,7 @@ margin-right: 15px;</string>
              <property name="styleSheet">
               <string notr="true">background-color: #2E2B3F;
 color: #fff;
-font: 9pt, bold;</string>
+font: 9pt;</string>
              </property>
              <property name="text">
               <string>Webcam</string>
@@ -1205,7 +1221,7 @@ font: 9pt, bold;</string>
              <property name="styleSheet">
               <string notr="true">background-color: #2E2B3F;
 color: #fff;
-font: 9pt, bold;</string>
+font: 9pt;</string>
              </property>
              <property name="text">
               <string>Camera 2</string>
@@ -1248,7 +1264,7 @@ font: 9pt, bold;</string>
              <property name="styleSheet">
               <string notr="true">background-color: #2E2B3F;
 color: #fff;
-font: 9pt, bold;</string>
+font: 9pt;</string>
              </property>
              <property name="inputMask">
               <string/>
@@ -1288,7 +1304,7 @@ font: 9pt, bold;</string>
              <property name="styleSheet">
               <string notr="true">background-color: #2E2B3F;
 color: #fff;
-font: 9pt, bold;</string>
+font: 9pt;</string>
              </property>
              <property name="text">
               <string>Camera 4</string>
@@ -1430,8 +1446,9 @@ font: 9pt, bold;</string>
            <item row="0" column="0">
             <widget class="QLabel" name="cameraCountLabel">
              <property name="styleSheet">
-              <string notr="true">
-font: 10pt, bold;</string>
+              <string notr="true">background-color: #2E2B3F;
+color: #fff;
+font: 9pt;</string>
              </property>
              <property name="text">
               <string>Layout:</string>
@@ -1518,7 +1535,7 @@ border-radius: 5px;
         <item>
          <widget class="QLabel" name="detectionLogLabel">
           <property name="styleSheet">
-           <string notr="true">font: 10pt, bold;
+           <string notr="true">font: 7pt, bold;
 margin-top: 20%;
 margin-bottom: 20%;</string>
           </property>
@@ -1541,10 +1558,12 @@ margin-bottom: 20%;</string>
                     background-color: #3a364f;
                     color: white;
                     gridline-color: white;
+					font: 9pt;
                 }
                 QHeaderView::section {
                     background-color: #3a364f;
                     color: white;
+					font: 9pt;
                 }
                 QTableView::item:selected {
                     background-color: #4c4a6f;

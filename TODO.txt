@@ -21,3 +21,6 @@ TODO
 3. slide = label, make sure to change the name: number, DONE
 4. Stats label alignment error, DONE
 5. Refresh the detection log page on each navigation to the page
+
+10/10/2024
+1. Refresh detection log table and recent detection table on navigation
