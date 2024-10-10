@@ -2,9 +2,10 @@ import sys
 import os
 import io
 from PyQt5 import QtWidgets, uic
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QWidget, QTableView, QLabel, QDialog, QVBoxLayout, QHeaderView
+from PyQt5.QtChart import QChart, QChartView, QPieSeries
+from PyQt5.QtGui import QPainter, QBrush, QColor, QImage, QPixmap
+from PyQt5.QtCore import QTimer, QDate, Qt, QMargins
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QDialogButtonBox, QDialog, QWidget, QDateEdit, QHeaderView, QHBoxLayout, QPushButton
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery, QSqlQueryModel
 from menu_buttons import MenuButtonsMixin  # Import the mixin
 
@@ -49,60 +50,62 @@ class DetectionLogWindow(QtWidgets.QWidget):
         if not self.db.open():
             print("Unable to open database")
             return
+        
+        # Create a model
+        self.model = QSqlQueryModel(self)  # Change to QSqlQueryModel for custom queries
 
         # Prepare a query to select records from the detection_log table
         query = QSqlQuery("SELECT id, location, detection_date, detection_time, detected_weapon, detection_confidence, image_name, image_data, checked, action FROM detection_log")
 
-        # Create and set the model
-        self.model = ReadOnlySqlTableModel(self)
-        self.model.setQuery(query)
+        # Execute the query and set it in the model
+        if query.exec_():
+            self.model = ReadOnlySqlTableModel(self)  # Use your custom model
+            self.model.setQuery(query)  # Set the executed query in your model
 
-        # Set headers
-        self.model.setHeaderData(0, Qt.Horizontal, "No.")
-        self.model.setHeaderData(1, Qt.Horizontal, "Location")
-        self.model.setHeaderData(2, Qt.Horizontal, "Detection Date")
-        self.model.setHeaderData(3, Qt.Horizontal, "Detection Time")
-        self.model.setHeaderData(4, Qt.Horizontal, "Detected Weapon")
-        self.model.setHeaderData(5, Qt.Horizontal, "Detection Confidence (%)")
-        self.model.setHeaderData(6, Qt.Horizontal, "Image Name")
-        self.model.setHeaderData(8, Qt.Horizontal, "Reviewed")  # Column for reviewed status
-        self.model.setHeaderData(9, Qt.Horizontal, "Actions")  # Column for buttons
+            # Set headers
+            self.model.setHeaderData(0, Qt.Horizontal, "No.")
+            self.model.setHeaderData(1, Qt.Horizontal, "Location")
+            self.model.setHeaderData(2, Qt.Horizontal, "Detection Date")
+            self.model.setHeaderData(3, Qt.Horizontal, "Detection Time")
+            self.model.setHeaderData(4, Qt.Horizontal, "Detected Weapon")
+            self.model.setHeaderData(5, Qt.Horizontal, "Detection Confidence (%)")
+            self.model.setHeaderData(6, Qt.Horizontal, "Image Name")
+            self.model.setHeaderData(8, Qt.Horizontal, "Reviewed")  # Column for reviewed status
+            self.model.setHeaderData(9, Qt.Horizontal, "Actions")  # Column for buttons
 
-        self.detectionLogTable.setModel(self.model)
+            self.detectionLogTable.setModel(self.model)
 
-        # Hide the primary key and image data columns
-        self.detectionLogTable.hideColumn(0)  # Hide the id column
-        self.detectionLogTable.hideColumn(6)  # Hide the image_name
-        self.detectionLogTable.hideColumn(7)  # Hide the image_data
+            # Hide the primary key and image data columns
+            self.detectionLogTable.hideColumn(0)  # Hide the id column
+            self.detectionLogTable.hideColumn(6)  # Hide the image_name
+            self.detectionLogTable.hideColumn(7)  # Hide the image_data
 
-        # Resize columns
-        header = self.detectionLogTable.horizontalHeader()
-        header.setSectionResizeMode(QHeaderView.Stretch)
+            # Resize columns
+            header = self.detectionLogTable.horizontalHeader()
+            header.setSectionResizeMode(QHeaderView.Stretch)
 
-        # Set styles
-        self.detectionLogTable.setStyleSheet("""
-            QTableView {
-                background-color: #3a364f;
-                color: white;
-                gridline-color: white;
-                font: 9pt;
-            }
-            QHeaderView::section {
-                background-color: #3a364f;
-                color: white;
-                font: bold;
-            }
-            QTableView::item:selected {
-                background-color: #4c4a6f;
-                color: white;
-            }
-            QTableCornerButton::section {
-                background-color: #3a364f;  /* Top left corner button */
-            }
-        """)
+            # Set styles
+            self.detectionLogTable.setStyleSheet("""
+                QTableView {
+                    background-color: #3a364f;
+                    color: white;
+                    gridline-color: white;
+                }
+                QHeaderView::section {
+                    background-color: #3a364f;
+                    color: white;
+                }
+                QTableView::item:selected {
+                    background-color: #4c4a6f;
+                    color: white;
+                }
+                QTableCornerButton::section {
+                    background-color: #3a364f;  /* Top left corner button */
+                }
+            """)
 
-        # Add 'View Image' buttons
-        self.add_view_image_buttons()
+            # Add 'View Image' buttons
+            self.add_view_image_buttons()
 
     def add_view_image_buttons(self):
         for row in range(self.model.rowCount()):
