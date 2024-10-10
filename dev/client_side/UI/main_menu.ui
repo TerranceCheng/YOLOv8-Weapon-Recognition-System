@@ -355,7 +355,7 @@
 }</string>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="MainMenuPage">
        <property name="styleSheet">
@@ -830,23 +830,23 @@ font: 7pt, bold;</string>
               </item>
               <item>
                <widget class="QTableView" name="recentDetectionTable">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>215</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>315</height>
-                 </size>
-                </property>
-                <property name="autoFillBackground">
-                 <bool>false</bool>
-                </property>
                 <property name="styleSheet">
-                 <string notr="true"/>
+                 <string notr="true">                QTableView {
+                    background-color: #3a364f;
+                    color: white;
+                    gridline-color: white;
+                }
+                QHeaderView::section {
+                    background-color: #3a364f;
+                    color: white;
+                }
+                QTableView::item:selected {
+                    background-color: #4c4a6f;
+                    color: white;
+                }
+                QTableCornerButton::section {
+                    background-color: #3a364f;  /* Top left corner button */
+                }</string>
                 </property>
                 <property name="frameShape">
                  <enum>QFrame::Panel</enum>
@@ -854,17 +854,8 @@ font: 7pt, bold;</string>
                 <property name="frameShadow">
                  <enum>QFrame::Raised</enum>
                 </property>
-                <property name="lineWidth">
-                 <number>0</number>
-                </property>
-                <property name="horizontalScrollBarPolicy">
-                 <enum>Qt::ScrollBarAsNeeded</enum>
-                </property>
                 <property name="sizeAdjustPolicy">
-                 <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
-                </property>
-                <property name="autoScrollMargin">
-                 <number>8</number>
+                 <enum>QAbstractScrollArea::AdjustToContents</enum>
                 </property>
                 <property name="tabKeyNavigation">
                  <bool>false</bool>
@@ -878,28 +869,13 @@ font: 7pt, bold;</string>
                 <property name="selectionMode">
                  <enum>QAbstractItemView::SingleSelection</enum>
                 </property>
-                <property name="textElideMode">
-                 <enum>Qt::ElideMiddle</enum>
+                <property name="selectionBehavior">
+                 <enum>QAbstractItemView::SelectRows</enum>
                 </property>
                 <property name="showGrid">
                  <bool>false</bool>
                 </property>
-                <property name="sortingEnabled">
-                 <bool>true</bool>
-                </property>
-                <property name="cornerButtonEnabled">
-                 <bool>false</bool>
-                </property>
-                <attribute name="horizontalHeaderCascadingSectionResizes">
-                 <bool>false</bool>
-                </attribute>
                 <attribute name="horizontalHeaderHighlightSections">
-                 <bool>false</bool>
-                </attribute>
-                <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-                 <bool>false</bool>
-                </attribute>
-                <attribute name="verticalHeaderVisible">
                  <bool>false</bool>
                 </attribute>
                 <attribute name="verticalHeaderHighlightSections">
@@ -1585,7 +1561,7 @@ margin-bottom: 20%;</string>
            <enum>QFrame::Raised</enum>
           </property>
           <property name="sizeAdjustPolicy">
-           <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+           <enum>QAbstractScrollArea::AdjustToContents</enum>
           </property>
           <property name="tabKeyNavigation">
            <bool>false</bool>
